@@ -114,13 +114,12 @@
             <chef-table-body>
               <chef-table-row *ngFor="let org of orgs">
                 <chef-table-cell>
-                  <a [routerLink]="['/infrastructure','chef-servers', server?.id, 'org', org.id, 'cookbooks']">{{ org.name }}</a>
+                  <a [routerLink]="['/infrastructure','chef-servers', server?.id, 'org', org.id]">{{ org.name }}</a>
                 </chef-table-cell>
                 <chef-table-cell>{{ org.admin_user }}</chef-table-cell>
                 <chef-table-cell class="three-dot-column">
                   <mat-select panelClass="chef-control-menu" id="menu-{{org.id}}">
                     <mat-option data-cy="delete" (onSelectionChange)="startOrgDelete($event, org)">Delete Org</mat-option>
-                    <mat-option data-cy="roles"> <a [routerLink]="['/infrastructure','chef-servers', server?.id, 'org', org.id, 'roles']">Infra Roles</a></mat-option>
                   </mat-select>
                 </chef-table-cell>
               </chef-table-row>
