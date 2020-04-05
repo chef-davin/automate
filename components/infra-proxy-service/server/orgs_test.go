@@ -170,7 +170,7 @@ func TestOrgs(t *testing.T) {
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 		})
 
-		t.Run("when the org required field server id is missing or empty, raise an invalid argument error", func(t *testing.T) {
+		t.Run("when the org required field server ID is missing or empty, raise an invalid argument error", func(t *testing.T) {
 			ctx := context.Background()
 			resp, err := cl.CreateOrg(ctx, &request.CreateOrg{
 				Name:      "infra-org",
@@ -179,7 +179,7 @@ func TestOrgs(t *testing.T) {
 				Projects:  []string{},
 			})
 			require.Nil(t, resp)
-			assert.Contains(t, err.Error(), "must supply server id")
+			assert.Contains(t, err.Error(), "must supply server ID")
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 
 			resp2, err := cl.CreateOrg(ctx, &request.CreateOrg{
@@ -190,7 +190,7 @@ func TestOrgs(t *testing.T) {
 				Projects:  []string{},
 			})
 			assert.Nil(t, resp2)
-			assert.Contains(t, err.Error(), "must supply server id")
+			assert.Contains(t, err.Error(), "must supply server ID")
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 		})
 
@@ -492,7 +492,7 @@ func TestOrgs(t *testing.T) {
 	t.Run("GetOrg", func(t *testing.T) {
 		test.ResetState(context.Background(), t, serviceRef)
 
-		t.Run("when there is no id in the request, raise an invalid argument error", func(t *testing.T) {
+		t.Run("when there is no ID in the request, raise an invalid argument error", func(t *testing.T) {
 			ctx := context.Background()
 			resp, err := cl.GetOrg(ctx, &request.GetOrg{
 				Id: "",
@@ -948,7 +948,7 @@ func TestOrgs(t *testing.T) {
 				Projects:  []string{},
 			})
 			require.Nil(t, resp)
-			assert.Contains(t, err.Error(), "must supply org id")
+			assert.Contains(t, err.Error(), "must supply org ID")
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 
 			resp2, err := cl.UpdateOrg(ctx, &request.UpdateOrg{
@@ -959,7 +959,7 @@ func TestOrgs(t *testing.T) {
 				Projects:  []string{},
 			})
 			assert.Nil(t, resp2)
-			assert.Contains(t, err.Error(), "must supply org id")
+			assert.Contains(t, err.Error(), "must supply org ID")
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 		})
 
@@ -1000,7 +1000,7 @@ func TestOrgs(t *testing.T) {
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 		})
 
-		t.Run("when the org required field server id is missing or empty, raise an invalid argument error", func(t *testing.T) {
+		t.Run("when the org required field server ID is missing or empty, raise an invalid argument error", func(t *testing.T) {
 			ctx := context.Background()
 			resp, err := cl.UpdateOrg(ctx, &request.UpdateOrg{
 				Id:        "23e01ea1-976e-4626-88c8-43345c5d912e",
@@ -1009,7 +1009,7 @@ func TestOrgs(t *testing.T) {
 				Projects:  []string{},
 			})
 			require.Nil(t, resp)
-			assert.Contains(t, err.Error(), "must supply server id")
+			assert.Contains(t, err.Error(), "must supply server ID")
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 
 			resp2, err := cl.UpdateOrg(ctx, &request.UpdateOrg{
@@ -1020,7 +1020,7 @@ func TestOrgs(t *testing.T) {
 				Projects:  []string{},
 			})
 			assert.Nil(t, resp2)
-			assert.Contains(t, err.Error(), "must supply server id")
+			assert.Contains(t, err.Error(), "must supply server ID")
 			grpctest.AssertCode(t, codes.InvalidArgument, err)
 		})
 
