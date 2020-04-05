@@ -80,10 +80,10 @@ func TestOrgs(t *testing.T) {
 			resp, err := cl.CreateOrg(ctx, req)
 			require.NoError(t, err)
 			require.NotNil(t, resp)
+
 			org := resp.Org
 			assert.Equal(t, req.Name, org.Name)
 			assert.Equal(t, req.AdminUser, org.AdminUser)
-			assert.Equal(t, req.AdminKey, secretWithID.Data[1].Value)
 			assert.Equal(t, req.ServerId, org.ServerId)
 			assert.Equal(t, 2, len(org.Projects))
 
@@ -290,8 +290,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			require.NotNil(t, orgs)
-			assert.Contains(t, orgs.Orgs, resp1.Org)
-			assert.Contains(t, orgs.Orgs, resp2.Org)
 			assert.Equal(t, 2, len(orgs.Orgs))
 
 			cleanupOrg(ctx, t, cl, resp1.Org.Id)
@@ -335,7 +333,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			require.NotNil(t, orgs)
-			assert.Contains(t, orgs.Orgs, resp1.Org)
 			assert.Equal(t, 1, len(orgs.Orgs))
 
 			cleanupOrg(ctx, t, cl, resp1.Org.Id)
@@ -380,7 +377,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			require.NotNil(t, orgs)
-			assert.Contains(t, orgs.Orgs, resp1.Org)
 			assert.Equal(t, 1, len(orgs.Orgs))
 
 			cleanupOrg(ctx, t, cl, resp1.Org.Id)
@@ -440,8 +436,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			require.NotNil(t, orgs)
-			assert.Contains(t, orgs.Orgs, resp1.Org)
-			assert.Contains(t, orgs.Orgs, resp2.Org)
 			assert.Equal(t, 2, len(orgs.Orgs))
 
 			cleanupOrg(ctx, t, cl, resp1.Org.Id)
@@ -487,8 +481,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			require.NotNil(t, orgs)
-			assert.NotContains(t, orgs.Orgs, resp1.Org)
-			assert.NotContains(t, orgs.Orgs, resp2.Org)
 			assert.Equal(t, 0, len(orgs.Orgs))
 
 			cleanupOrg(ctx, t, cl, resp1.Org.Id)
@@ -555,7 +547,6 @@ func TestOrgs(t *testing.T) {
 			assert.Equal(t, resp.Org.Name, org.Org.Name)
 			assert.Equal(t, resp.Org.Id, org.Org.Id)
 			assert.Equal(t, resp.Org.AdminUser, org.Org.AdminUser)
-			assert.Equal(t, resp.Org.AdminKey, secretWithID.GetId())
 			assert.Equal(t, resp.Org.Projects, org.Org.Projects)
 
 			cleanupOrg(ctx, t, cl, resp.Org.Id)
@@ -625,7 +616,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			assert.Equal(t, len(orgsAfter.Orgs), len(orgsBefore.Orgs)-1)
-			assert.Contains(t, orgsAfter.Orgs, resp2.Org)
 
 			authzMock.PurgeSubjectFromPoliciesFunc = test.DefaultMockPurgeFunc
 			cleanupOrg(ctx, t, cl, resp2.Org.Id)
@@ -692,7 +682,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			assert.Equal(t, len(orgsAfter.Orgs), len(orgsBefore.Orgs)-1)
-			assert.Contains(t, orgsAfter.Orgs, resp2.Org)
 
 			authzMock.PurgeSubjectFromPoliciesFunc = test.DefaultMockPurgeFunc
 			cleanupOrg(ctx, t, cl, resp2.Org.Id)
@@ -759,7 +748,6 @@ func TestOrgs(t *testing.T) {
 			})
 			require.NoError(t, err)
 			assert.Equal(t, len(orgsAfter.Orgs), len(orgsBefore.Orgs)-1)
-			assert.Contains(t, orgsAfter.Orgs, resp2.Org)
 
 			authzMock.PurgeSubjectFromPoliciesFunc = test.DefaultMockPurgeFunc
 			cleanupOrg(ctx, t, cl, resp2.Org.Id)
@@ -907,6 +895,7 @@ func TestOrgs(t *testing.T) {
 			ctx := context.Background()
 			secretsMock.EXPECT().Create(gomock.Any(), &newSecret, gomock.Any()).Return(secretID, nil)
 			secretsMock.EXPECT().Read(gomock.Any(), secretID, gomock.Any()).Return(&secretWithID, nil)
+			secretsMock.EXPECT().Delete(gomock.Any(), secretID, gomock.Any())
 			req := &request.CreateOrg{
 				Name:      "infra-org",
 				AdminUser: "admin",
@@ -918,15 +907,11 @@ func TestOrgs(t *testing.T) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 
-			secretsMock.EXPECT().Update(gomock.Any(), &secretWithID, gomock.Any())
-			secretsMock.EXPECT().Read(gomock.Any(), secretID, gomock.Any()).Return(&secretWithID, nil)
-
 			newName := "my-infra-org"
 			updateReq := &request.UpdateOrg{
 				Id:        resp.Org.Id,
 				Name:      newName,
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  serverRes.Server.Id,
 				Projects:  []string{"project1", "project2"},
 			}
@@ -945,7 +930,6 @@ func TestOrgs(t *testing.T) {
 				Id:        "97e01ea1-976e-4626-88c8-43345c5d934f",
 				Name:      "new-org-name",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  serverRes.Server.Id,
 				Projects:  []string{"project1", "project2"},
 			}
@@ -960,7 +944,6 @@ func TestOrgs(t *testing.T) {
 			resp, err := cl.UpdateOrg(ctx, &request.UpdateOrg{
 				Name:      "update-infra-org",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  serverRes.Server.Id,
 				Projects:  []string{},
 			})
@@ -972,7 +955,6 @@ func TestOrgs(t *testing.T) {
 				Id:        "",
 				Name:      "update-infra-org",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  serverRes.Server.Id,
 				Projects:  []string{},
 			})
@@ -987,7 +969,6 @@ func TestOrgs(t *testing.T) {
 				Id:        "35bffbab-3a49-dd8a-94a1-9ea87ec5c3cc",
 				Name:      "infra-org",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  serverRes.Server.Id,
 				Projects:  []string{},
 			})
@@ -1000,7 +981,6 @@ func TestOrgs(t *testing.T) {
 			resp, err := cl.UpdateOrg(ctx, &request.UpdateOrg{
 				Id:        "23e01ea1-976e-4626-88c8-43345c5d912e",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  serverRes.Server.Id,
 				Projects:  []string{},
 			})
@@ -1012,7 +992,6 @@ func TestOrgs(t *testing.T) {
 				Id:        "23e01ea1-976e-4626-88c8-43345c5d912e",
 				Name:      "",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  serverRes.Server.Id,
 				Projects:  []string{},
 			})
@@ -1027,7 +1006,6 @@ func TestOrgs(t *testing.T) {
 				Id:        "23e01ea1-976e-4626-88c8-43345c5d912e",
 				Name:      "infra-org",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				Projects:  []string{},
 			})
 			require.Nil(t, resp)
@@ -1038,7 +1016,6 @@ func TestOrgs(t *testing.T) {
 				Id:        "23e01ea1-976e-4626-88c8-43345c5d912e",
 				Name:      "infra-org",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  "",
 				Projects:  []string{},
 			})
@@ -1049,15 +1026,10 @@ func TestOrgs(t *testing.T) {
 
 		t.Run("when the server does not exist, raise server not found error", func(t *testing.T) {
 			ctx := context.Background()
-			secretsMock.EXPECT().Create(gomock.Any(), &newSecret, gomock.Any()).Return(secretID, nil)
-			secretsMock.EXPECT().Read(gomock.Any(), secretID, gomock.Any()).Return(&secretWithID, nil)
-			secretsMock.EXPECT().Delete(gomock.Any(), secretID, gomock.Any())
-
 			resp, err := cl.UpdateOrg(ctx, &request.UpdateOrg{
 				Id:        "23e01ea1-976e-4626-88c8-43345c5d912e",
 				Name:      "infra-org",
 				AdminUser: "admin",
-				AdminKey:  "--KEY--",
 				ServerId:  "97e01ea1-976e-4626-88c8-43345c5d934f",
 				Projects:  []string{},
 			})
