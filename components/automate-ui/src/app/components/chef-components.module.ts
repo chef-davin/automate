@@ -43,9 +43,7 @@ import { PagePickerComponent } from './page-picker/page-picker.component';
 import { PendingEditsBarComponent } from './pending-edits-bar/pending-edits-bar.component';
 import { ProcessProgressBarComponent } from './process-progress-bar/process-progress-bar.component';
 import { ProjectsDropdownComponent } from './projects-dropdown/projects-dropdown.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarNoShadeComponent } from './sidebar-no-shade/sidebar-no-shade.component';
-import { SidebarEntryComponent } from './sidebar-entry/sidebar-entry.component';
 import { TabComponent } from './tab/tab.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { TableBodyComponent } from './table/table-body/table-body.component';
@@ -100,9 +98,7 @@ import { TableHeaderComponent } from './table/table-header/table-header.componen
     PendingEditsBarComponent,
     ProcessProgressBarComponent,
     ProjectsDropdownComponent,
-    SidebarComponent,
     SidebarNoShadeComponent,
-    SidebarEntryComponent,
     TabComponent,
     TabsComponent,
     TableBodyComponent,
@@ -142,9 +138,7 @@ import { TableHeaderComponent } from './table/table-header/table-header.componen
     PendingEditsBarComponent,
     ProcessProgressBarComponent,
     ProjectsDropdownComponent,
-    SidebarComponent,
     SidebarNoShadeComponent,
-    SidebarEntryComponent,
     TabComponent,
     TabsComponent,
     TableBodyComponent,

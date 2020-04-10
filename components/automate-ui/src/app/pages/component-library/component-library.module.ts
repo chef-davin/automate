@@ -34,7 +34,6 @@ import { DemoCalendarComponent } from './demos/demo-calendar/demo-calendar.compo
 import { DemoCheckboxComponent } from './demos/demo-checkbox/demo-checkbox.component';
 import { DemoFormFieldComponent } from './demos/demo-form-field/demo-form-field.component';
 import { DemoInputComponent } from './demos/demo-input/demo-input.component';
-import { DemoSidebarComponent } from './demos/demo-sidebar/demo-sidebar.component';
 import {
   DemoProjectsDropdownComponent
 } from './demos/demo-projects-dropdown/demo-projects-dropdown.component';
@@ -63,7 +62,6 @@ import {
     DemoCheckboxComponent,
     DemoFormFieldComponent,
     DemoInputComponent,
-    DemoSidebarComponent,
     DemoProjectsDropdownComponent
   ],
   providers: [
